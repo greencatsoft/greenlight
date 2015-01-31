@@ -9,9 +9,10 @@ trait TestRunner extends Runner {
   def classLoader: ClassLoader
 
   override def done(): String = {
-    if (isDone) throw new IllegalStateException("")
+    if (isDone) throw new IllegalStateException(
+      "The runner has already been executed.")
 
-    this.isDone = false
+    this.isDone = true
     ""
   }
 }

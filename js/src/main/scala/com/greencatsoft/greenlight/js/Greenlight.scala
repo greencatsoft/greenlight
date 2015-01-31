@@ -15,7 +15,7 @@ class Greenlight extends TestFramework {
 
   override def slaveRunner(
     args: Array[String], remoteArgs: Array[String], testClassLoader: ClassLoader, send: String => Unit): Runner =
-    new RunnerImpl(args, remoteArgs, testClassLoader)
+    runner(args, remoteArgs, testClassLoader)
 
   class RunnerImpl(
       override val args: Array[String],
@@ -37,11 +37,15 @@ class Greenlight extends TestFramework {
   class TaskImpl(
       override val taskDef: TaskDef,
       override val classLoader: ClassLoader) extends TestTask {
-
-    override def suite: TestSuite =
+    
+  private def deepSelect(receiver: scalajs.js.Dynamic, name: String) =
+    name.split('.').foldLeft(receiver)((obj, n) => obj.selectDynamic(n))
+    
+    override def suite: TestSuite = 
       TestUtils.loadModule(taskDef.fullyQualifiedName, classLoader).asInstanceOf[TestSuite]
 
-    override def execute(eventHandler: EventHandler, loggers: Array[Logger], continuation: Array[Task] => Unit) {
-    }
+    override def execute(eventHandler: EventHandler, loggers: Array[Logger], continuation: Array[Task] => Unit): Unit =
+      continuation(execute(eventHandler, loggers))
   }
 }
+

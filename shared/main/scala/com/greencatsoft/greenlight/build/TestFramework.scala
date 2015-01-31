@@ -9,7 +9,7 @@ trait TestFramework extends Framework {
   override def fingerprints: Array[Fingerprint] = Array {
     new SubclassFingerprint {
 
-      override val isModule = true
+      override def isModule = true
 
       override def requireNoArgConstructor: Boolean = true
 

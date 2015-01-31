@@ -1,14 +1,18 @@
 name := "greenlight"
 
-description := "Simple BDD style testing framework for Scala and Scala.js."
+version in ThisBuild := "0.1-SNAPSHOT"
 
-organization := "com.greencatsoft"
+description in ThisBuild := "Simple BDD style testing framework for Scala and Scala.js."
 
-version := "0.1-SNAPSHOT"
+organization in ThisBuild := "com.greencatsoft"
 
-homepage := Some(url("http://github.com/greencatsoft/greenlight"))
+homepage in ThisBuild := Some(url("http://github.com/greencatsoft/greenlight"))
 
-publishTo := {
+scalaVersion in ThisBuild := "2.11.5"
+
+scalacOptions in ThisBuild ++= Seq("-feature","-deprecation")
+
+publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
   if(isSnapshot.value)
     Some("snapshots" at nexus + "content/repositories/snapshots")
@@ -16,11 +20,11 @@ publishTo := {
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 
-publishMavenStyle := true
+publishMavenStyle in ThisBuild := true
 
-pomIncludeRepository := { _ => false }
+pomIncludeRepository in ThisBuild := { _ => false }
 
-pomExtra := (
+pomExtra in ThisBuild := (
   <licenses>
     <license>
       <name>Apache License 2.0</name>
@@ -43,8 +47,6 @@ pomExtra := (
 
 val sharedSettings = Seq(
     name := "greenlight",
-    scalaVersion := "2.11.5",
-    scalacOptions ++= Seq("-feature","-deprecation"),
     unmanagedSourceDirectories in Compile := (scalaSource in Compile).value :: Nil,
     unmanagedSourceDirectories in Compile <+= baseDirectory(_ /  "shared" / "main" / "scala"),
     unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil,
@@ -67,15 +69,17 @@ lazy val `greenlight-jvm` = project.in(file("jvm"))
   .settings(
     libraryDependencies ++= Seq(
       "org.scala-sbt" % "test-interface" % "1.0",
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+      "org.scala-js" %% "scalajs-stubs" % scalaJSVersion
     ),
     testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.jvm.Greenlight"))
   )
 
 lazy val `greenlight-js` = project.in(file("js"))
+  .enablePlugins(ScalaJSPlugin)
   .settings(sharedSettings: _*)
   .settings(
     libraryDependencies += "org.scala-js" %% "scalajs-test-interface" % scalaJSVersion,
+    scalaJSStage in Test := FastOptStage,
     testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.js.Greenlight"))
   )
-  .enablePlugins(ScalaJSPlugin)
