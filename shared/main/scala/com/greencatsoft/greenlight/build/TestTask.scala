@@ -1,6 +1,6 @@
 package com.greencatsoft.greenlight.build
 
-import scala.Console.{ BLUE, BOLD, GREEN, MAGENTA, RED, RESET }
+import scala.Console.{ BLUE, BOLD, CYAN, GREEN, MAGENTA, RED, RESET }
 
 import com.greencatsoft.greenlight.{ TestCase, TestFailureException, TestSuite }
 import com.greencatsoft.greenlight.grammar.Statement.CaseDefinition
@@ -22,11 +22,24 @@ trait TestTask extends Task {
 
     def indent(size: Int = 1) = "  " * size
 
-    loggers.debug("Running " + taskDef.fullyQualifiedName)
+    loggers.info(s"${CYAN}Running ${taskDef.fullyQualifiedName}:$RESET")
+
+    var lastSubject: Option[String] = None
 
     suite.registry.testCases collect {
       case TestCase(CaseDefinition(subject, mode, spec), content) =>
-        loggers.info(s"${MAGENTA}* $RESET$BOLD$subject$RESET")
+        def printSubject() = {
+          loggers.info("")
+          loggers.info(s"${MAGENTA}* $RESET$BOLD$subject$RESET")
+        }
+
+        lastSubject match {
+          case Some(s) if subject.description != s => printSubject()
+          case None => printSubject()
+          case _ =>
+        }
+
+        lastSubject = Some(subject.description)
 
         val reporter = new TestResultCollector
 
@@ -42,7 +55,7 @@ trait TestTask extends Task {
         val elapsed = current - started
 
         val result = if (reporter.failure == 0) {
-          loggers.info(s"$GREEN${indent()}$RESET$mode $spec $stats")
+          loggers.info(s"$GREEN${indent()}+ $RESET$mode $spec $stats")
 
           TestResult(Success, elapsed)
         } else {
