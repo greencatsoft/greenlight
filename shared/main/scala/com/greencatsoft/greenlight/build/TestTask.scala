@@ -79,6 +79,8 @@ trait TestTask extends Task {
         eventHandler.handle(result)
     }
 
+    loggers.info("")
+
     Array.empty
   }
 
