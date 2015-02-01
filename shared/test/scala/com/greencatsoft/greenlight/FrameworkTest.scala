@@ -1,14 +1,12 @@
 package com.greencatsoft.greenlight
 
-import scala.reflect.ClassTag
-
 object FrameworkTest extends TestSuite {
 
   "The framework" should "be able to test equality" in {
 
-    (1 + 1) must be(2)
+    (1 + 1) must be (2)
 
-    ("A" + "B") must be("AB")
+    ("A" + "B") must be ("AB")
 
     "Scala.js" should not be ("overlooked.")
   }
