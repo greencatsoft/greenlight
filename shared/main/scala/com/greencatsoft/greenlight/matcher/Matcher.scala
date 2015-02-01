@@ -17,5 +17,7 @@ object Matcher {
   trait Matchers {
 
     implicit val equalityMatcher = EqualityMatcher
+
+    implicit val exceptionMatcher = ExceptionMatcher
   }
 }

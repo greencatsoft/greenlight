@@ -6,6 +6,7 @@ package object grammar {
 
   trait Grammar
     extends Verb.Words
+    with Article.Words
     with Negation.Words
     with Subject.Conversions
     with Object.Conversions

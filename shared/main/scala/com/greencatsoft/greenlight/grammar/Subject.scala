@@ -2,10 +2,10 @@ package com.greencatsoft.greenlight.grammar
 
 import scala.language.implicitConversions
 
-import com.greencatsoft.greenlight.{ TestRegistry, TestReporter }
-import com.greencatsoft.greenlight.grammar.ModalVerb.{ Can, Must, Should }
-import com.greencatsoft.greenlight.grammar.Specification.{ CaseDescription, WhatIsExpected }
-import com.greencatsoft.greenlight.grammar.Statement.{ Assertation, CaseDefinition }
+import com.greencatsoft.greenlight.{TestRegistry, TestReporter}
+import com.greencatsoft.greenlight.grammar.ModalVerb.{Can, Must, Should}
+import com.greencatsoft.greenlight.grammar.Specification.{CaseDescription, WhatIsExpected}
+import com.greencatsoft.greenlight.grammar.Statement.{Assertation, CaseDefinition}
 import com.greencatsoft.greenlight.grammar.Verb.FollowedByNegation
 import com.greencatsoft.greenlight.matcher.Matcher
 
@@ -55,9 +55,9 @@ object Subject {
     implicit def toSubject[T](value: T)(implicit reporter: TestReporter): Subject[T] =
       WhatToTest(value, reporter)
 
-    def it(implicit registry: TestRegistry): Subject[_] = previousSubject(registry)
+    def It(implicit registry: TestRegistry): Subject[_] = previousSubject(registry)
 
-    def they(implicit registry: TestRegistry): Subject[_] = previousSubject(registry)
+    def They(implicit registry: TestRegistry): Subject[_] = previousSubject(registry)
 
     protected def previousSubject(implicit registry: TestRegistry): Subject[_] =
       registry.testCases.headOption match {

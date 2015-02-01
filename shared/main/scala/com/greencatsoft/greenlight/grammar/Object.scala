@@ -1,6 +1,7 @@
 package com.greencatsoft.greenlight.grammar
 
 import scala.language.implicitConversions
+import scala.reflect._
 
 trait Object extends Word
 

@@ -1,15 +1,27 @@
 package com.greencatsoft.greenlight
 
+import scala.reflect.ClassTag
+
 object FrameworkTest extends TestSuite {
 
-  "Scala" should "be cool" in {
+  "The framework" should "be able to test equality" in {
 
-    (1 + 1) must be (2)
+    (1 + 1) must be(2)
 
     ("A" + "B") must be("AB")
+
+    "Scala.js" should not be ("overlooked.")
   }
 
-  it must "be powerful to use" in {
-    "Javascript" should not be ("better.")
+  It can "be used to test if an exception is thrown" in {
+
+    A_[NullPointerException] should be_thrown_in {
+      val value = null
+      value.toString
+    }
+
+    A_[NullPointerException] should not be_thrown_in {
+      println("Scala.js rocks!")
+    }
   }
 }
