@@ -6,7 +6,7 @@ import com.greencatsoft.greenlight.TestFailureException
 import com.greencatsoft.greenlight.grammar.Emptiness
 import com.greencatsoft.greenlight.grammar.Verb.Be
 
-object EmptinessMatcher extends Matcher[SeqLike[_, _], Be, Emptiness] {
+trait EmptySeqMatcher extends Matcher[SeqLike[_, _], Be, Emptiness] {
 
   override def matches(actual: SeqLike[_, _], expected: Emptiness): Unit = if (!actual.isEmpty)
     throw TestFailureException(s"Expected '$actual' to be empty.")

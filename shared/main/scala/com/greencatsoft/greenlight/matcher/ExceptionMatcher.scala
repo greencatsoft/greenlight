@@ -2,11 +2,17 @@ package com.greencatsoft.greenlight.matcher
 
 import scala.reflect.ClassTag
 
-import com.greencatsoft.greenlight.TestFailureException
+import com.greencatsoft.greenlight.{ TestFailureException, TestReporter }
 import com.greencatsoft.greenlight.grammar.CodeBlock
-import com.greencatsoft.greenlight.grammar.Verb.BeThrownIn
+import com.greencatsoft.greenlight.grammar.Object.Expectation
+import com.greencatsoft.greenlight.grammar.PassiveVerb
+import com.greencatsoft.greenlight.grammar.Specification.WhatIsExpected
+import com.greencatsoft.greenlight.grammar.Statement.Assertation
+import com.greencatsoft.greenlight.grammar.Verb.FollowedByNegation
 
-object ExceptionMatcher extends Matcher[ClassTag[_], BeThrownIn, CodeBlock[_]] {
+import ExceptionMatcher.BeThrownIn
+
+trait ExceptionMatcher extends Matcher[ClassTag[_], BeThrownIn, CodeBlock[_]] {
 
   override def matches(actual: ClassTag[_], expected: CodeBlock[_]) {
     val expectedType = actual.runtimeClass
@@ -35,6 +41,34 @@ object ExceptionMatcher extends Matcher[ClassTag[_], BeThrownIn, CodeBlock[_]] {
         throw TestFailureException(s"Expected '$expectedType' not to be thrown but it was.")
       case e: RuntimeException => throw e
       case e: Exception => throw new RuntimeException(e)
+    }
+  }
+}
+
+object ExceptionMatcher {
+
+  class BeThrownIn extends PassiveVerb {
+
+    override def description: String = "be thrown in"
+
+    def apply[A](block: => Any)(implicit matcher: Matcher[A, BeThrownIn, CodeBlock[_]]) =
+      WhatIsExpected(this, Expectation(CodeBlock(() => block)))
+  }
+
+  trait Words {
+
+    object be_thrown_in extends BeThrownIn
+  }
+
+  object Words extends Words
+
+  trait Conversions {
+
+    implicit class NotThrownIn[A](fbn: FollowedByNegation[A])(implicit reporter: TestReporter) {
+
+      def be_thrown_in(block: => Any)(
+        implicit matcher: Matcher[A, BeThrownIn, CodeBlock[_]]): Assertation[A, BeThrownIn, CodeBlock[_]] =
+        fbn.builder.assert(WhatIsExpected(Words.be_thrown_in, !Expectation(CodeBlock(() => block))))
     }
   }
 }

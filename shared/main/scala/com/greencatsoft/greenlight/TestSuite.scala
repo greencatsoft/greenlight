@@ -4,7 +4,7 @@ import scala.scalajs.js.annotation.JSExportDescendentObjects
 import scala.util.DynamicVariable
 
 import com.greencatsoft.greenlight.grammar.Grammar
-import com.greencatsoft.greenlight.matcher.Matcher.Matchers
+import com.greencatsoft.greenlight.matcher.Matchers
 
 @JSExportDescendentObjects
 trait TestSuite extends Grammar with Matchers {
