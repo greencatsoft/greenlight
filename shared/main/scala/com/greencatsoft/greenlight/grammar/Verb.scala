@@ -26,7 +26,7 @@ object Verb {
       WhatIsExpected(this, Expectation(CodeBlock(() => block)))
   }
 
-  class FollowedByNegation[A](builder: AssertationBuilder[A])(implicit reporter: TestReporter) {
+  class FollowedByNegation[A](val builder: AssertationBuilder[A])(implicit reporter: TestReporter) {
 
     def be[E](expectation: Expectation[E])(implicit matcher: Matcher[A, Be, E]): Assertation[A, Be, E] =
       builder.assert(WhatIsExpected(Words.be, !expectation))
