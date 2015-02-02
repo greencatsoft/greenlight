@@ -26,6 +26,10 @@ trait TestTask extends Task {
 
     var lastSubject: Option[String] = None
 
+    var success = 0
+    var failure = 0
+    var error = 0
+
     suite.registry.testCases collect {
       case TestCase(CaseDefinition(subject, mode, spec), content) =>
         def printSubject() = {
@@ -57,6 +61,7 @@ trait TestTask extends Task {
         val result = if (reporter.failure == 0) {
           loggers.info(s"$GREEN${indent()}+ $RESET$mode $spec $stats")
 
+          success += 1
           TestResult(Success, elapsed)
         } else {
           loggers.info(s"$RED${indent()}X $RESET$mode $spec $stats")
@@ -74,8 +79,10 @@ trait TestTask extends Task {
             case Some(t) =>
               loggers.trace(t)
 
+              error += 1
               TestResult(Error, elapsed, Some(t))
             case None =>
+              failure += 1
               TestResult(Failure, elapsed)
           }
         }
@@ -83,6 +90,9 @@ trait TestTask extends Task {
         eventHandler.handle(result)
     }
 
+    val total = success + failure + error
+
+    loggers.info(s"${MAGENTA}Summary: Total $total, Passed $success, Failed $failure, Error $error.$RESET")
     loggers.info("")
 
     Array.empty
