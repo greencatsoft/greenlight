@@ -17,6 +17,8 @@ package object matcher {
     implicit object optionMatcher extends OptionMatcher
 
     implicit object exceptionMatcher extends ExceptionMatcher
+
+    implicit object emptyStringMatcher extends EmptyStringMatcher
   }
 
   trait HighPriorityImplicits extends DefaultPriorityImplicits {
