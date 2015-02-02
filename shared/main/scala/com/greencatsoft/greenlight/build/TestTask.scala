@@ -62,8 +62,12 @@ trait TestTask extends Task {
           loggers.info(s"$RED${indent()}X $RESET$mode $spec $stats")
 
           reporter.failures collect {
-            case TestFailureException(message) =>
-              loggers.info(s"$RED${indent(2)}$message$RESET")
+            case TestFailureException(message, statement) => statement match {
+              case Some(assertation) =>
+                loggers.info(s"$RED${indent(2)}: $message ('$assertation')$RESET")
+              case None =>
+                loggers.info(s"$RED${indent(2)}$message$RESET")
+            }
           }
 
           reporter.errors.headOption match {

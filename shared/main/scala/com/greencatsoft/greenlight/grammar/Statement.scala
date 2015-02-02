@@ -36,10 +36,15 @@ object Statement {
     def verify()(implicit matcher: Matcher[A, V, E]): Assertation[A, V, E] =
       specification match {
         case WhatIsExpected(_, Expectation(value, negation)) =>
-          if (negation)
-            matcher.notMatches(subject.value, value)
-          else
-            matcher.matches(subject.value, value)
+          try {
+            if (negation)
+              matcher.notMatches(subject.value, value)
+            else
+              matcher.matches(subject.value, value)
+          } catch {
+            case TestFailureException(msg, _) =>
+              throw TestFailureException(msg, Some(this))
+          }
 
           this
       }
