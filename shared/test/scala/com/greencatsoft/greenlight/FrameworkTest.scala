@@ -11,11 +11,13 @@ object FrameworkTest extends TestSuite {
     "Scala.js" should not be ("overlooked.")
   }
 
-  It should "be able to check emptiness" in {
+  It should "be able to check emptiness of collections and options" in {
 
     Seq.empty must be (empty)
+    None must be (empty)
 
     List(1, 2, 3) must not be (empty)
+    Some("value") should not be (empty)
   }
 
   It can "be used to test if an exception is thrown" in {

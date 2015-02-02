@@ -18,7 +18,11 @@ object Matcher {
     implicit val equalityMatcher = EqualityMatcher
   }
 
-  trait Matchers extends LowerPriorityMatchers {
+  trait MediumPriorityMatchers extends LowerPriorityMatchers {
+    implicit val optionMatcher = OptionMatcher
+  }
+
+  trait Matchers extends MediumPriorityMatchers {
 
     implicit val emptinessMatcher = EmptinessMatcher
 

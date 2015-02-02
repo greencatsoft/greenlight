@@ -22,8 +22,10 @@ object FrameworkTest extends TestSuite {
   It should "be able to check emptiness" in {
 
     Seq.empty must be (empty)
+    None must be (empty)
 
     List(1, 2, 3) must not be (empty)
+    Some("value") should not be (empty)
   }
 
   It can "be used to test if an exception is thrown" in {
