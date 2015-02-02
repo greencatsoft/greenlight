@@ -7,6 +7,26 @@ The project is at a very early stage of development, so it should be used with c
 
 ## How to Use
 
+### SBT Settings
+
+Add the following lines to your ```sbt``` build definition:
+
+```scala
+resolvers += Resolver.sonatypeRepo("snapshots")
+
+libraryDependencies += "com.greencatsoft" %%% "greenlight" % "0.1-SNAPSHOT"
+```
+
+```scala
+// In case of a Scala project
+testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.jvm.Greenlight"))
+
+// In case of a Scala.js project
+testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.jvm.Greenlight"))
+```
+
+## Code Example
+
 ```scala
 object FrameworkTest extends TestSuite {
 
