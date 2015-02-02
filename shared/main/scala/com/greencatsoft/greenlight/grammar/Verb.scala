@@ -20,7 +20,7 @@ object Verb {
       WhatIsExpected(this, expectation)
   }
 
-  abstract class BeThrownIn extends AbstractVerb("be thrown in ") with PassiveVerb {
+  abstract class BeThrownIn extends AbstractVerb("be thrown in") with PassiveVerb {
 
     def apply[A](block: => Any)(implicit matcher: Matcher[A, BeThrownIn, CodeBlock[_]]) =
       WhatIsExpected(this, Expectation(CodeBlock(() => block)))

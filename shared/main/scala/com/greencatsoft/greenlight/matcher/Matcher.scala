@@ -14,9 +14,13 @@ trait Matcher[-A, V <: Verb, -E] {
 
 object Matcher {
 
-  trait Matchers {
-
+  trait LowerPriorityMatchers {
     implicit val equalityMatcher = EqualityMatcher
+  }
+
+  trait Matchers extends LowerPriorityMatchers {
+
+    implicit val emptinessMatcher = EmptinessMatcher
 
     implicit val exceptionMatcher = ExceptionMatcher
   }
