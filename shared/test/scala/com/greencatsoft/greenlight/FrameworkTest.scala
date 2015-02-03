@@ -11,21 +11,38 @@ object FrameworkTest extends TestSuite {
     "Scala.js" must not be ("overlooked!")
   }
 
-  It should "be able to check emptiness of various types" in {
+  It should "be able to check if a collection is empty" in {
 
     List(1, 2, 3) must not be (empty)
 
     Seq.empty must be (empty)
+  }
 
-    Some("value") should not be (empty)
+  It can "check if an option is defined or not" in {
+
+    val value = Some("value")
+
+    value must be (defined)
+    value should not be (empty)
 
     None must be (empty)
+  }
 
-    "" must be (empty)
+  It can "also check if a string value is empty" in {
+    val emptyValue = ""
 
-    (null: String) must be (empty)
+    emptyValue must be (defined)
+    emptyValue must be (empty)
 
-    "Scala" must not be (empty)
+    val nullValue: String = null
+
+    nullValue should be (empty)
+    nullValue should not be (defined)
+
+    val value = "Scala"
+
+    value must not be (empty)
+    value should be (defined)
   }
 
   It can "be used to test if an exception is thrown" in {

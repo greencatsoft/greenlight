@@ -9,20 +9,24 @@ package object matcher {
 
   trait LowPriorityImplicits {
 
-    implicit object equalityMatcher extends EqualityMatcher
+    implicit object matchEquality extends EqualityMatcher
   }
 
   trait DefaultPriorityImplicits extends LowPriorityImplicits {
 
-    implicit object optionMatcher extends OptionMatcher
+    implicit object matchOptionEmpiness extends OptionMatchers.Emptiness
 
-    implicit object exceptionMatcher extends ExceptionMatcher
+    implicit object matchOptionDefinition extends OptionMatchers.Definition
 
-    implicit object emptyStringMatcher extends EmptyStringMatcher
+    implicit object matchException extends ExceptionMatcher
+
+    implicit object matchStringEmptiness extends StringMatchers.Emptiness
   }
 
   trait HighPriorityImplicits extends DefaultPriorityImplicits {
 
-    implicit object emptySeqMatcher extends EmptySeqMatcher
+    implicit object matchCollectionEmptiness extends CollectionMatchers.Emptiness
+
+    implicit object matchNullity extends NullityMatcher
   }
 }
