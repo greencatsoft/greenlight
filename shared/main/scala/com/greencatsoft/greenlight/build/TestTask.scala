@@ -1,13 +1,12 @@
 package com.greencatsoft.greenlight.build
 
 import scala.Console.{ BLUE, BOLD, CYAN, GREEN, MAGENTA, RED, RESET }
-
 import com.greencatsoft.greenlight.{ TestCase, TestFailureException, TestSuite }
 import com.greencatsoft.greenlight.grammar.Statement.CaseDefinition
-
 import sbt.testing.{ Event, EventHandler, Fingerprint, Logger, OptionalThrowable, Selector, Status }
 import sbt.testing.Status.{ Error, Failure, Success }
 import sbt.testing.Task
+import com.greencatsoft.greenlight.BeforeAndAfter
 
 trait TestTask extends Task {
 
@@ -30,64 +29,78 @@ trait TestTask extends Task {
     var failure = 0
     var error = 0
 
-    suite.registry.testCases collect {
-      case TestCase(CaseDefinition(subject, mode, spec), content) =>
-        def printSubject() = {
-          loggers.info("")
-          loggers.info(s"${MAGENTA}* $RESET$BOLD$subject$RESET")
-        }
+    suite.registry.testCases foreach { test =>
+      suite match {
+        case callback: BeforeAndAfter => callback.invokeBefore(test.definition)
+        case _ =>
+      }
 
-        lastSubject match {
-          case Some(s) if subject.description != s => printSubject()
-          case None => printSubject()
-          case _ =>
-        }
+      test match {
+        case TestCase(CaseDefinition(subject, mode, spec), content) =>
+          try {
+            def printSubject() = {
+              loggers.info("")
+              loggers.info(s"${MAGENTA}* $RESET$BOLD$subject$RESET")
+            }
 
-        lastSubject = Some(subject.description)
+            lastSubject match {
+              case Some(s) if subject.description != s => printSubject()
+              case None => printSubject()
+              case _ =>
+            }
 
-        val reporter = new TestResultCollector
+            lastSubject = Some(subject.description)
 
-        def stats = s"$BLUE(${reporter.total} specs, ${reporter.failure} failures)$RESET"
+            val reporter = new TestResultCollector
 
-        def current = System.currentTimeMillis
-        val started = current
+            def stats = s"$BLUE(${reporter.total} specs, ${reporter.failure} failures)$RESET"
 
-        currentSuite.reporter.withValue(reporter) {
-          content()
-        }
+            def current = System.currentTimeMillis
+            val started = current
 
-        val elapsed = current - started
+            currentSuite.reporter.withValue(reporter) {
+              content()
+            }
 
-        val result = if (reporter.failure == 0) {
-          loggers.info(s"$GREEN${indent()}+ $RESET$mode $spec $stats")
+            val elapsed = current - started
 
-          success += 1
-          TestResult(Success, elapsed)
-        } else {
-          loggers.info(s"$RED${indent()}X $RESET$mode $spec $stats")
+            val result = if (reporter.failure == 0) {
+              loggers.info(s"$GREEN${indent()}+ $RESET$mode $spec $stats")
 
-          reporter.failures collect {
-            case TestFailureException(message, statement) => statement match {
-              case Some(assertation) =>
-                loggers.info(s"$RED${indent(2)}: $message ('$assertation')$RESET")
-              case None =>
-                loggers.info(s"$RED${indent(2)}$message$RESET")
+              success += 1
+              TestResult(Success, elapsed)
+            } else {
+              loggers.info(s"$RED${indent()}X $RESET$mode $spec $stats")
+
+              reporter.failures collect {
+                case TestFailureException(message, statement) => statement match {
+                  case Some(assertation) =>
+                    loggers.info(s"$RED${indent(2)}: $message ('$assertation')$RESET")
+                  case None =>
+                    loggers.info(s"$RED${indent(2)}$message$RESET")
+                }
+              }
+
+              reporter.errors.headOption match {
+                case Some(t) =>
+                  loggers.trace(t)
+
+                  error += 1
+                  TestResult(Error, elapsed, Some(t))
+                case None =>
+                  failure += 1
+                  TestResult(Failure, elapsed)
+              }
+            }
+
+            eventHandler.handle(result)
+          } finally {
+            suite match {
+              case callback: BeforeAndAfter => callback.invokeAfter(test.definition)
+              case _ =>
             }
           }
-
-          reporter.errors.headOption match {
-            case Some(t) =>
-              loggers.trace(t)
-
-              error += 1
-              TestResult(Error, elapsed, Some(t))
-            case None =>
-              failure += 1
-              TestResult(Failure, elapsed)
-          }
-        }
-
-        eventHandler.handle(result)
+      }
     }
 
     val total = success + failure + error
@@ -99,9 +112,9 @@ trait TestTask extends Task {
   }
 
   case class TestResult(
-      override val status: Status,
-      override val duration: Long,
-      override val throwable: OptionalThrowable = None) extends Event {
+    override val status: Status,
+    override val duration: Long,
+    override val throwable: OptionalThrowable = None) extends Event {
 
     override def fullyQualifiedName: String = taskDef.fullyQualifiedName
 

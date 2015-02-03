@@ -59,6 +59,7 @@ object FrameworkTest extends TestSuite {
   }
 
   It can "also check if a string value is empty" in {
+
     val emptyValue = ""
 
     emptyValue must be (defined)
@@ -86,4 +87,24 @@ object FrameworkTest extends TestSuite {
     }
   }
 }
-  ```
+
+object LifeCycleTest extends TestSuite with BeforeAndAfter {
+
+  var specification: Option[String] = None
+
+  before { (s: Statement) =>
+    this.specification = Some(s.description)
+  }
+
+  after {
+    this.specification = None
+  }
+
+  "BeforeAndAfter trait" can "be used to be notified before and after a specification" in {
+    specification should not be (empty)
+    specification foreach { it =>
+      it should be ("BeforeAndAfter trait can be used to be notified before and after a specification")
+    }
+  }
+}
+```

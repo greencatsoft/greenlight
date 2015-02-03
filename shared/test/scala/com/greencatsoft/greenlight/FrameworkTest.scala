@@ -29,6 +29,7 @@ object FrameworkTest extends TestSuite {
   }
 
   It can "also check if a string value is empty" in {
+
     val emptyValue = ""
 
     emptyValue must be (defined)
