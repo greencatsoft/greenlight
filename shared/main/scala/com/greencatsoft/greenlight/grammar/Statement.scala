@@ -24,7 +24,7 @@ object Statement {
       override val specification: CaseDescription) extends Statement {
 
     def in(content: => Unit)(implicit registry: TestRegistry): TestCase[A] =
-      registry.register(TestCase[A](this, () => content))
+      registry.register(TestCase[A](this, new CodeBlock(() => content)))
   }
 
   case class Assertation[A, V <: Verb, E](

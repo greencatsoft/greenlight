@@ -52,7 +52,7 @@ object ExceptionMatcher {
     override def description: String = "be thrown in"
 
     def apply[A](block: => Any)(implicit matcher: Matcher[A, BeThrownIn, CodeBlock[_]]) =
-      WhatIsExpected(this, Expectation(CodeBlock(() => block)))
+      WhatIsExpected(this, Expectation(new CodeBlock(() => block)))
   }
 
   trait Words {
@@ -68,7 +68,7 @@ object ExceptionMatcher {
 
       def be_thrown_in(block: => Any)(
         implicit matcher: Matcher[A, BeThrownIn, CodeBlock[_]]): Assertation[A, BeThrownIn, CodeBlock[_]] =
-        fbn.builder.assert(WhatIsExpected(Words.be_thrown_in, !Expectation(CodeBlock(() => block))))
+        fbn.builder.assert(WhatIsExpected(Words.be_thrown_in, !Expectation(new CodeBlock(() => block))))
     }
   }
 }
