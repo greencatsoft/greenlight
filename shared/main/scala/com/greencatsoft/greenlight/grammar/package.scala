@@ -8,7 +8,7 @@ package object grammar {
     extends Verb.Words
     with Article.Words
     with Negation.Words
-    with Emptiness.Words
+    with Predicates.Words
     with Subject.Conversions
     with Object.Conversions
     with Specification.Conversions
