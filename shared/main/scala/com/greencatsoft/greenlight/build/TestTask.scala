@@ -114,7 +114,7 @@ trait TestTask extends Task {
       }
     }
 
-    val total = success + failure + error
+    val total = success + failure + error + ignored
 
     loggers.info(s"${MAGENTA}Summary: Total $total, Passed $success, Failed $failure, Error $error, Ignored $ignored.$RESET")
     loggers.info("")
