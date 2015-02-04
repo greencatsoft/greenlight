@@ -2,10 +2,10 @@ package com.greencatsoft.greenlight.grammar
 
 import scala.language.implicitConversions
 
-import com.greencatsoft.greenlight.{TestRegistry, TestReporter}
-import com.greencatsoft.greenlight.grammar.ModalVerb.{Can, Must, Should}
-import com.greencatsoft.greenlight.grammar.Specification.{CaseDescription, WhatIsExpected}
-import com.greencatsoft.greenlight.grammar.Statement.{Assertation, CaseDefinition}
+import com.greencatsoft.greenlight.{ TestRegistry, TestReporter }
+import com.greencatsoft.greenlight.grammar.ModalVerb.{ Can, Might, Must, Should }
+import com.greencatsoft.greenlight.grammar.Specification.{ CaseDescription, WhatIsExpected }
+import com.greencatsoft.greenlight.grammar.Statement.{ Assertation, CaseDefinition }
 import com.greencatsoft.greenlight.grammar.Verb.FollowedByNegation
 import com.greencatsoft.greenlight.matcher.Matcher
 
@@ -36,6 +36,8 @@ trait Subject[A] extends Word {
 
   def can(not: Negation)(implicit reporter: TestReporter): FollowedByNegation[A] =
     new FollowedByNegation(AssertationBuilder(this, Can))
+
+  def might(desc: CaseDescription): CaseDefinition[A] = CaseDefinition(this, Might, desc)
 
   override def description: String = toString(value)
 }

@@ -1,12 +1,14 @@
 package com.greencatsoft.greenlight.build
 
-import scala.Console.{ BLUE, BOLD, CYAN, GREEN, MAGENTA, RED, RESET }
-import com.greencatsoft.greenlight.{ TestCase, TestFailureException, TestSuite }
+import scala.Console.{ BLUE, BOLD, CYAN, GREEN, MAGENTA, RED, RESET, YELLOW }
+
+import com.greencatsoft.greenlight.{ BeforeAndAfter, TestCase, TestFailureException, TestSuite }
+import com.greencatsoft.greenlight.grammar.ModalVerb.Might
 import com.greencatsoft.greenlight.grammar.Statement.CaseDefinition
+
 import sbt.testing.{ Event, EventHandler, Fingerprint, Logger, OptionalThrowable, Selector, Status }
-import sbt.testing.Status.{ Error, Failure, Success }
+import sbt.testing.Status.{ Error, Failure, Skipped, Success }
 import sbt.testing.Task
-import com.greencatsoft.greenlight.BeforeAndAfter
 
 trait TestTask extends Task {
 
@@ -28,6 +30,7 @@ trait TestTask extends Task {
     var success = 0
     var failure = 0
     var error = 0
+    var ignored = 0
 
     suite.registry.testCases foreach { test =>
       suite match {
@@ -36,6 +39,14 @@ trait TestTask extends Task {
       }
 
       test match {
+        case TestCase(CaseDefinition(subject, mode, spec), content) if mode == Might =>
+          lastSubject = Some(subject.description)
+
+          loggers.info(s"$YELLOW${indent()}? $RESET$mode $spec $YELLOW(ignored)$RESET")
+
+          eventHandler.handle(TestResult(Skipped, 0))
+
+          ignored += 1
         case TestCase(CaseDefinition(subject, mode, spec), content) =>
           try {
             def printSubject() = {
@@ -105,7 +116,7 @@ trait TestTask extends Task {
 
     val total = success + failure + error
 
-    loggers.info(s"${MAGENTA}Summary: Total $total, Passed $success, Failed $failure, Error $error.$RESET")
+    loggers.info(s"${MAGENTA}Summary: Total $total, Passed $success, Failed $failure, Error $error, Ignored $ignored.$RESET")
     loggers.info("")
 
     Array.empty

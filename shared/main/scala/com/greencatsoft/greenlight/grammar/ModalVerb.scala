@@ -17,4 +17,8 @@ object ModalVerb {
   object Can extends ModalVerb {
     override def description: String = "can"
   }
+
+  object Might extends ModalVerb {
+    override def description: String = "might"
+  }
 }

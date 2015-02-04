@@ -46,6 +46,11 @@ object FrameworkTest extends TestSuite {
     value should be (defined)
   }
 
+  // You can skip a test case by using 'might' instead of 'should/must/can'.
+  It might "not be ready for prime time" in {
+    "You" should be ("joking!")
+  }
+
   It can "be used to test if an exception is thrown" in {
 
     A_[NullPointerException] should be_thrown_in {
