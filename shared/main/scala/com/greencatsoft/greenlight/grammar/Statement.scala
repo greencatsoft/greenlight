@@ -19,18 +19,21 @@ trait Statement extends Describable {
 object Statement {
 
   case class CaseDefinition[A](
-      override val subject: Subject[A],
-      override val mode: ModalVerb,
-      override val specification: CaseDescription) extends Statement {
+    override val subject: Subject[A],
+    override val mode: ModalVerb,
+    override val specification: CaseDescription) extends Statement {
 
-    def in(content: => Unit)(implicit registry: TestRegistry): TestCase[A] =
+    def in(content: => Any)(implicit registry: TestRegistry): TestCase[A] =
       registry.register(TestCase[A](this, new CodeBlock(() => content)))
+
+    def in[T](content: T => Any)(implicit registry: TestRegistry, fixture: () => T): TestCase[A] =
+      registry.register(TestCase[A](this, new CodeBlock(() => content.apply(fixture()))))
   }
 
   case class Assertation[A, V <: Verb, E](
-      override val subject: Subject[A],
-      override val mode: ModalVerb,
-      override val specification: WhatIsExpected[V, E]) extends Statement {
+    override val subject: Subject[A],
+    override val mode: ModalVerb,
+    override val specification: WhatIsExpected[V, E]) extends Statement {
 
     @throws[TestFailureException]
     def verify()(implicit matcher: Matcher[A, V, E]): Assertation[A, V, E] =
