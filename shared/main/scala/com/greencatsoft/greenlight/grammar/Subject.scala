@@ -55,12 +55,12 @@ object Subject {
     implicit def toSubject[T](value: T)(implicit reporter: TestReporter): Subject[T] =
       WhatToTest(value, reporter)
 
-    def It(implicit registry: TestRegistry): Subject[_] = previousSubject(registry)
+    def It(implicit registry: TestRegistry): Subject[_] = lastSubject(registry)
 
-    def They(implicit registry: TestRegistry): Subject[_] = previousSubject(registry)
+    def They(implicit registry: TestRegistry): Subject[_] = lastSubject(registry)
 
-    protected def previousSubject(implicit registry: TestRegistry): Subject[_] =
-      registry.testCases.headOption match {
+    protected def lastSubject(implicit registry: TestRegistry): Subject[_] =
+      registry.testCases.lastOption match {
         case Some(test) => test.definition.subject
         case None => throw new IllegalArgumentException(
           "Unable to find previous test declarations.")
