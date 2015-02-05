@@ -13,31 +13,31 @@ trait Subject[A] extends Word {
 
   val value: A
 
-  def should(desc: CaseDescription): CaseDefinition[A] = CaseDefinition(this, Should, desc)
+  def should(desc: CaseDescription): CaseDefinition[A] = Should.makeCase(this, desc)
 
   def should[V <: Verb, E](spec: WhatIsExpected[V, E])(implicit reporter: TestReporter, matcher: Matcher[A, V, E]): Assertation[A, V, E] =
-    AssertationBuilder(this, Should).assert(spec)
+    Should.makeAssertion(this, spec)
 
   def should(not: Negation)(implicit reporter: TestReporter): FollowedByNegation[A] =
-    new FollowedByNegation(AssertationBuilder(this, Should))
+    Should.makeNegativeAssertion(this, not)
 
-  def must(desc: CaseDescription): CaseDefinition[A] = CaseDefinition(this, Must, desc)
+  def must(desc: CaseDescription): CaseDefinition[A] = Must.makeCase(this, desc)
 
   def must[V <: Verb, E](spec: WhatIsExpected[V, E])(implicit reporter: TestReporter, matcher: Matcher[A, V, E]): Assertation[A, V, E] =
-    AssertationBuilder(this, Must).assert(spec)
+    Must.makeAssertion(this, spec)
 
   def must(not: Negation)(implicit reporter: TestReporter): FollowedByNegation[A] =
-    new FollowedByNegation(AssertationBuilder(this, Must))
+    Must.makeNegativeAssertion(this, not)
 
-  def can(desc: CaseDescription): CaseDefinition[A] = CaseDefinition(this, Can, desc)
+  def can(desc: CaseDescription): CaseDefinition[A] = Can.makeCase(this, desc)
 
   def can[V <: Verb, E](spec: WhatIsExpected[V, E])(implicit reporter: TestReporter, matcher: Matcher[A, V, E]): Assertation[A, V, E] =
-    AssertationBuilder(this, Can).assert(spec)
+    Can.makeAssertion(this, spec)
 
   def can(not: Negation)(implicit reporter: TestReporter): FollowedByNegation[A] =
-    new FollowedByNegation(AssertationBuilder(this, Can))
+    Can.makeNegativeAssertion(this, not)
 
-  def might(desc: CaseDescription): CaseDefinition[A] = CaseDefinition(this, Might, desc)
+  def might(desc: CaseDescription): CaseDefinition[A] = Might.makeCase(this, desc)
 
   override def description: String = toString(value)
 }
