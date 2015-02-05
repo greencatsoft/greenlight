@@ -12,9 +12,13 @@ object Specification {
   case class CaseDescription(override val description: String) extends Specification
 
   case class WhatIsExpected[V <: Verb, E](verb: V, expectation: Expectation[E])
-      extends Specification {
+    extends Specification {
 
-    override def description: String = s"$verb $expectation"
+    override def description: String =
+      if (expectation.negation)
+        s"not $verb $expectation"
+      else
+        s"$verb $expectation"
   }
 
   trait Conversions {
