@@ -2,7 +2,7 @@ package com.greencatsoft.greenlight.matcher
 
 import scala.reflect.ClassTag
 
-import com.greencatsoft.greenlight.{ TestFailureException, TestReporter }
+import com.greencatsoft.greenlight.TestFailureException
 import com.greencatsoft.greenlight.grammar.CodeBlock
 import com.greencatsoft.greenlight.grammar.Object.Expectation
 import com.greencatsoft.greenlight.grammar.PassiveVerb
@@ -64,7 +64,7 @@ object ExceptionMatcher {
 
   trait Conversions {
 
-    implicit class NotThrownIn[A](fbn: FollowedByNegation[A])(implicit reporter: TestReporter) {
+    implicit class NotThrownIn[A](fbn: FollowedByNegation[A]) {
 
       def be_thrown_in(block: => Any)(
         implicit matcher: Matcher[A, BeThrownIn, CodeBlock[_]]): Assertation[A, BeThrownIn, CodeBlock[_]] =

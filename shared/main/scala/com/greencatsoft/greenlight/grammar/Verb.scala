@@ -1,9 +1,8 @@
 package com.greencatsoft.greenlight.grammar
 
-import com.greencatsoft.greenlight.TestReporter
 import com.greencatsoft.greenlight.grammar.Object.Expectation
 import com.greencatsoft.greenlight.grammar.Specification.WhatIsExpected
-import com.greencatsoft.greenlight.grammar.Statement.Assertation
+import com.greencatsoft.greenlight.grammar.Statement.{ Assertation, AssertationBuilder }
 import com.greencatsoft.greenlight.matcher.Matcher
 
 trait Verb extends Word
@@ -20,7 +19,7 @@ object Verb {
       WhatIsExpected(this, expectation)
   }
 
-  class FollowedByNegation[A](val builder: AssertationBuilder[A])(implicit reporter: TestReporter) {
+  class FollowedByNegation[A](val builder: AssertationBuilder[A]) {
 
     def be[E](expectation: Expectation[E])(implicit matcher: Matcher[A, Be, E]): Assertation[A, Be, E] =
       builder.assert(WhatIsExpected(Words.be, !expectation))

@@ -52,4 +52,10 @@ object Statement {
           this
       }
   }
+
+  case class AssertationBuilder[A](subject: Subject[A], mode: ModalVerb) {
+
+    def assert[V <: Verb, E](spec: WhatIsExpected[V, E])(implicit matcher: Matcher[A, V, E]): Assertation[A, V, E] =
+      subject.registry.register(Assertation[A, V, E](subject, mode, spec))
+  }
 }
