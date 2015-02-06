@@ -15,23 +15,31 @@ trait ModalVerb extends Word {
 
   def makeNegativeAssertion[A](subject: Subject[A], not: Negation): FollowedByNegation[A] =
     new FollowedByNegation(AssertationBuilder(subject, this))
+
+  def mandatory: Boolean = true
 }
 
 object ModalVerb {
 
   object Should extends ModalVerb {
+
     override def description: String = "should"
   }
 
   object Must extends ModalVerb {
+
     override def description: String = "must"
   }
 
   object Can extends ModalVerb {
+
     override def description: String = "can"
   }
 
   object Might extends ModalVerb {
+
+    override def mandatory: Boolean = false
+
     override def description: String = "might"
   }
 }

@@ -1,13 +1,17 @@
 package com.greencatsoft.greenlight
 
+import scala.scalajs.js.annotation.JSExportDescendentObjects
+
+import com.greencatsoft.greenlight.grammar.ModalVerb.Might
 import com.greencatsoft.greenlight.grammar.Statement.{ Assertation, CaseDefinition }
 import com.greencatsoft.greenlight.grammar.Subject
 
 trait TestReporter {
 
-  def begin(suite: TestSuite): Unit = Unit
+  def begin(suite: TestSuite): Boolean = true
 
-  def begin(description: CaseDefinition[_]): Unit = Unit
+  def begin(description: CaseDefinition[_]): Boolean =
+    description.mode.mandatory
 
   def passed(assertation: Assertation[_, _, _]): Unit = Unit
 
@@ -38,19 +42,23 @@ trait StatefulTestReporter extends TestReporter {
 
   def lastError: Option[Throwable] = error
 
-  override def begin(suite: TestSuite) {
-    super.begin(suite)
+  override def begin(suite: TestSuite): Boolean = {
+    val continue = super.begin(suite)
 
     this.testSuite = Some(suite)
     this.subject = None
+
+    continue
   }
 
-  override def begin(description: CaseDefinition[_]) {
-    super.begin(description)
+  override def begin(description: CaseDefinition[_]): Boolean = {
+    val continue = super.begin(description)
 
     this.testCase = Some(description)
     this.subject = Some(description.subject)
     this.error = None
+
+    continue
   }
 
   override def error(t: Throwable) {
@@ -90,13 +98,13 @@ trait TestStatisticsCollector extends StatefulTestReporter {
 
   private var caseStats = CaseStats()
 
-  override def begin(suite: TestSuite) {
+  override def begin(suite: TestSuite): Boolean = {
     this.suiteStats = SuiteStats()
 
     super.begin(suite)
   }
 
-  override def begin(description: CaseDefinition[_]) {
+  override def begin(description: CaseDefinition[_]): Boolean = {
     this.caseStats = CaseStats()
 
     super.begin(description)

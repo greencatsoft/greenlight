@@ -18,7 +18,10 @@ trait TestSuite extends Grammar with Matchers {
   def cases: Seq[CaseDefinition[_]] = registry.testCases.map(_.definition)
 
   def run(reporters: TestReporter*) {
-    reporters.foreach(_.begin(this))
+    val runSuite =
+      reporters.foldLeft(true) {
+        (result, reporter) => result && reporter.begin(this)
+      }
 
     try {
       registry.testCases.foreach {
@@ -31,9 +34,11 @@ trait TestSuite extends Grammar with Matchers {
 
           val TestCase(definition, content) = test
 
-          reporters.foreach(_.begin(definition))
+          val runCase = reporters.foldLeft(runSuite) {
+            (result, reporter) => result && reporter.begin(definition)
+          }
 
-          if (definition.mode != Might) {
+          if (runCase) {
             registry.reporters.withValue(reporters) {
               try {
                 content()

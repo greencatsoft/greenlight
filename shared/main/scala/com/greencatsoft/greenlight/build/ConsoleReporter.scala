@@ -17,13 +17,13 @@ class ConsoleReporter(
 
   private def indent(size: Int = 1) = "  " * size
 
-  override def begin(suite: TestSuite) {
-    super.begin(suite)
-
+  override def begin(suite: TestSuite): Boolean = {
     loggers.info(s"${CYAN}Running ${suite.name}:$RESET")
+
+    super.begin(suite)
   }
 
-  override def begin(description: CaseDefinition[_]) {
+  override def begin(description: CaseDefinition[_]): Boolean = {
     val subject = description.subject
 
     def printSubject() = {
