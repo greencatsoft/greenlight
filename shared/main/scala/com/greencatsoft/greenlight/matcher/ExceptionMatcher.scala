@@ -22,12 +22,9 @@ trait ExceptionMatcher extends Matcher[ClassTag[_], BeThrownIn, CodeBlock[_]] {
 
       throw TestFailureException(s"Expected '$expectedType' to be thrown but it wasn't.")
     } catch {
-      case t: Throwable if !expectedType.isAssignableFrom(t.getClass) =>
-        t match {
-          case e: RuntimeException => throw e
-          case e: Exception => throw new RuntimeException(e)
-        }
-      case _: Throwable =>
+      case t: TestFailureException => throw t
+      case t: Throwable if expectedType.isAssignableFrom(t.getClass) =>
+      case t: Throwable => rethrow(t)
     }
   }
 
@@ -39,9 +36,14 @@ trait ExceptionMatcher extends Matcher[ClassTag[_], BeThrownIn, CodeBlock[_]] {
     } catch {
       case t: Throwable if expectedType.isAssignableFrom(t.getClass) =>
         throw TestFailureException(s"Expected '$expectedType' not to be thrown but it was.")
-      case e: RuntimeException => throw e
-      case e: Exception => throw new RuntimeException(e)
+      case e: Throwable => rethrow(e)
     }
+  }
+
+  private def rethrow(t: Throwable): Unit = t match {
+    case e: RuntimeException => throw e
+    case e: Error => throw e
+    case e => throw new RuntimeException(e)
   }
 }
 
