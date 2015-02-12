@@ -56,6 +56,7 @@ object FrameworkTest extends TestSuite {
     value should not be (empty)
 
     None must be (empty)
+    None should not be (defined)
   }
 
   It can "also check if a string value is empty" in {

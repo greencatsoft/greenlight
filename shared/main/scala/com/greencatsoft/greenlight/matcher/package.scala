@@ -14,9 +14,9 @@ package object matcher {
 
   trait DefaultPriorityImplicits extends LowPriorityImplicits {
 
-    implicit object matchOptionEmpiness extends OptionMatchers.Emptiness
+    implicit object matchNullity extends NullityMatcher
 
-    implicit object matchOptionDefinition extends OptionMatchers.Definition
+    implicit object matchOptionEmpiness extends OptionMatchers.Emptiness
 
     implicit object matchException extends ExceptionMatcher
 
@@ -25,8 +25,8 @@ package object matcher {
 
   trait HighPriorityImplicits extends DefaultPriorityImplicits {
 
-    implicit object matchCollectionEmptiness extends CollectionMatchers.Emptiness
+    implicit object matchOptionDefinition extends OptionMatchers.Definition
 
-    implicit object matchNullity extends NullityMatcher
+    implicit object matchCollectionEmptiness extends CollectionMatchers.Emptiness
   }
 }
