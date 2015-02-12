@@ -3,7 +3,6 @@ package com.greencatsoft.greenlight
 import scala.util.DynamicVariable
 import com.greencatsoft.greenlight.grammar.Statement.Assertation
 import com.greencatsoft.greenlight.grammar.Verb
-import com.greencatsoft.greenlight.matcher.Matcher
 
 class TestRegistry {
 
@@ -18,8 +17,7 @@ class TestRegistry {
     test
   }
 
-  def register[A, V <: Verb, E](assertation: Assertation[A, V, E])(
-    implicit matcher: Matcher[A, V, E]): Assertation[A, V, E] = {
+  def register[A, V <: Verb, E](assertation: Assertation[A, V, E]): Assertation[A, V, E] = {
 
     try {
       assertation.verify()

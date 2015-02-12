@@ -33,10 +33,10 @@ object Statement {
   case class Assertation[A, V <: Verb, E](
     override val subject: Subject[A],
     override val mode: ModalVerb,
-    override val specification: WhatIsExpected[V, E]) extends Statement {
-
+    override val specification: WhatIsExpected[V, E])(implicit matcher: Matcher[A, V, E]) extends Statement {
+println("########### " + matcher)
     @throws[TestFailureException]
-    def verify()(implicit matcher: Matcher[A, V, E]): Assertation[A, V, E] =
+    def verify(): Assertation[A, V, E] =
       specification match {
         case WhatIsExpected(_, Expectation(value, negation)) =>
           try {
