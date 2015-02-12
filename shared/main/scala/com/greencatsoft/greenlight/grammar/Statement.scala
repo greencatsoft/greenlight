@@ -34,7 +34,7 @@ object Statement {
     override val subject: Subject[A],
     override val mode: ModalVerb,
     override val specification: WhatIsExpected[V, E])(implicit matcher: Matcher[A, V, E]) extends Statement {
-println("########### " + matcher)
+
     @throws[TestFailureException]
     def verify(): Assertation[A, V, E] =
       specification match {
