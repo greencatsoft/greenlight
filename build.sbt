@@ -1,6 +1,6 @@
 name := "greenlight"
 
-version in ThisBuild := "0.1-SNAPSHOT"
+version in ThisBuild := "0.1"
 
 description in ThisBuild := "Simple BDD style testing framework for Scala and Scala.js."
 
