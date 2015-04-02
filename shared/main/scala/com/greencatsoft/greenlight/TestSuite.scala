@@ -23,6 +23,12 @@ trait TestSuite extends Grammar with Matchers {
         (result, reporter) => result && reporter.begin(this)
       }
 
+    this match {
+      case callback: BeforeAndAfterAll =>
+        callback.invokeBeforeAll()
+      case _ =>
+    }
+
     try {
       registry.testCases.foreach {
         case test =>
@@ -57,6 +63,12 @@ trait TestSuite extends Grammar with Matchers {
           }
       }
     } finally {
+      this match {
+        case callback: BeforeAndAfterAll =>
+          callback.invokeAfterAll()
+        case _ =>
+      }
+
       reporters.foreach(_.end(this))
     }
   }
