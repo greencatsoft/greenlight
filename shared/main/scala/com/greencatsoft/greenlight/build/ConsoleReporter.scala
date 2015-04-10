@@ -51,7 +51,7 @@ class ConsoleReporter(
         loggers.error(s"$RED${indent()}X $RESET$mode $spec $RED(error)$RESET")
 
         lastError foreach { e =>
-          loggers.error(s"$RED${indent(2)}Error occurred while running the test: $e$RESET}")
+          loggers.error(s"$RED${indent(2)}Error occurred while running the test: $e$RESET")
           loggers.trace(e)
         }
 
