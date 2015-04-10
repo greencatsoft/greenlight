@@ -10,7 +10,7 @@ trait BeforeAndAfterAll {
   private var afterAllCallbacks = Seq.empty[Callback]
 
   def beforeAll(callback: => Any): Unit =
-    this.beforeAllCallbacks +:= (() => callback)
+    this.beforeAllCallbacks :+= (() => callback)
 
   def afterAll(callback: => Any): Unit =
     this.afterAllCallbacks +:= (() => callback)

@@ -12,10 +12,10 @@ trait BeforeAndAfter {
   private var afterCallbacks = Seq.empty[Callback]
 
   def before(callback: => Any): Unit =
-    this.beforeCallbacks +:= ((s: Statement) => callback)
+    this.beforeCallbacks :+= ((s: Statement) => callback)
 
   def before(callback: Callback): Unit =
-    this.beforeCallbacks +:= callback
+    this.beforeCallbacks :+= callback
 
   def after(callback: => Any): Unit =
     this.afterCallbacks +:= ((s: Statement) => callback)
