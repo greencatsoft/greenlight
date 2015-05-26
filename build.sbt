@@ -51,7 +51,8 @@ val sharedSettings = Seq(
     unmanagedSourceDirectories in Compile <+= baseDirectory(_ /  "shared" / "main" / "scala"),
     unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil,
     unmanagedSourceDirectories in Test <+= baseDirectory(_ /  "shared" / "test" / "scala"),
-    EclipseKeys.useProjectId := true
+    EclipseKeys.useProjectId := true,
+    testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.Greenlight"))
   )
 
 lazy val root = project.in(file("."))
@@ -71,8 +72,7 @@ lazy val `greenlight-jvm` = project.in(file("jvm"))
       "org.scala-sbt" % "test-interface" % "1.0",
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-js" %% "scalajs-stubs" % scalaJSVersion
-    ),
-    testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.jvm.Greenlight"))
+    )
   )
 
 lazy val `greenlight-js` = project.in(file("js"))
@@ -80,6 +80,5 @@ lazy val `greenlight-js` = project.in(file("js"))
   .settings(sharedSettings: _*)
   .settings(
     libraryDependencies += "org.scala-js" %% "scalajs-test-interface" % scalaJSVersion,
-    scalaJSStage in Test := FastOptStage,
-    testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.js.Greenlight"))
+    scalaJSStage in Test := FastOptStage
   )

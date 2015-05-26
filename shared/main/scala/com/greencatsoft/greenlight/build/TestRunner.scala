@@ -1,12 +1,16 @@
 package com.greencatsoft.greenlight.build
 
-import sbt.testing.Runner
+import sbt.testing.{ Runner, Task, TaskDef }
 
-trait TestRunner extends Runner {
+class TestRunner(
+      override val args: Array[String],
+      override val remoteArgs: Array[String],
+      val classLoader: ClassLoader) extends Runner {
 
   private var isDone = false
 
-  def classLoader: ClassLoader
+  override def tasks(list: Array[TaskDef]): Array[Task] =
+    list.map(new TestTask(_, classLoader))
 
   override def done(): String = {
     if (isDone) throw new IllegalStateException(
@@ -15,4 +19,15 @@ trait TestRunner extends Runner {
     this.isDone = true
     ""
   }
+
+  // Scala.js specific
+
+  def receiveMessage(msg: String): Option[String] = None
+
+  def serializeTask(task: Task, serializer: TaskDef => String): String =
+    serializer(task.taskDef)
+
+  def deserializeTask(task: String, deserializer: String => TaskDef): Task =
+    new TestTask(deserializer(task), classLoader)
+
 }

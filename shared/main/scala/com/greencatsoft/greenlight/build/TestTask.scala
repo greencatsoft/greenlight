@@ -1,22 +1,27 @@
 package com.greencatsoft.greenlight.build
 
+import org.scalajs.testinterface.TestUtils
+
 import com.greencatsoft.greenlight.TestSuite
 
-import sbt.testing.{ Event, EventHandler, Fingerprint, Logger, OptionalThrowable, Selector, Status, Task }
+import sbt.testing.{ Event, EventHandler, Fingerprint, Logger, OptionalThrowable, Selector, Status, Task, TaskDef }
 
-trait TestTask extends Task {
-
-  def classLoader: ClassLoader
+class TestTask(
+      override val taskDef: TaskDef,
+      val classLoader: ClassLoader) extends Task {
 
   override def tags: Array[String] = Array.empty
 
-  protected def suite: TestSuite
-
   override def execute(eventHandler: EventHandler, loggers: Array[Logger]): Array[Task] = {
+    val suite = TestUtils.loadModule(taskDef.fullyQualifiedName, classLoader).asInstanceOf[TestSuite]
     suite.run(new ConsoleReporter(taskDef, eventHandler, loggers))
 
     Array.empty
   }
+
+  // Scala.js specific
+  def execute(eventHandler: EventHandler, loggers: Array[Logger], continuation: Array[Task] => Unit): Unit =
+    continuation(execute(eventHandler, loggers))
 
   case class TestResult(
     override val status: Status,
