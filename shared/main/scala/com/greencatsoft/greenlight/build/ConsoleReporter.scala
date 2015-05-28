@@ -53,6 +53,9 @@ class ConsoleReporter(
         lastError foreach { e =>
           loggers.error(s"$RED${indent(2)}Error occurred while running the test: $e$RESET")
           loggers.trace(e)
+
+          // Workaround for https://github.com/sbt/sbt/issues/1371
+          e.printStackTrace()
         }
 
         TestResult(Error, elapsed)
