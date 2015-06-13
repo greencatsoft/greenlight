@@ -18,11 +18,7 @@ libraryDependencies += "com.greencatsoft" %%% "greenlight" % "0.1"
 And override the default testing framework like below:
 
 ```scala
-// In case of a Scala project
-testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.jvm.Greenlight"))
-
-// In case of a Scala.js project
-testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.js.Greenlight"))
+testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.Greenlight"))
 ```
 
 If you want to test the latest snapshot version instead, change the version to 
