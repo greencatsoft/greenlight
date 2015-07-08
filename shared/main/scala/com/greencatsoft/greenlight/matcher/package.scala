@@ -28,5 +28,7 @@ package object matcher {
     implicit object matchOptionDefinition extends OptionMatchers.Definition
 
     implicit object matchCollectionEmptiness extends CollectionMatchers.Emptiness
+
+    implicit object matchCollectionContainment extends CollectionMatchers.Containment
   }
 }

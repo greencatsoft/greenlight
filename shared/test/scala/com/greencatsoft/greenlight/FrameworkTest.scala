@@ -47,6 +47,16 @@ object FrameworkTest extends TestSuite {
     value should be (defined)
   }
 
+  It can "also check if a collection contains an item or not" in {
+
+    val collection = Seq("a", "b", "c", "d")
+
+    collection must contain ("a")
+    collection must contain ("b")
+    
+    collection must not contain ("e")
+  }
+
   // You can skip a test case by using 'might' instead of 'should/must/can'.
   It might "not be ready for prime time" in {
     "You" should be ("joking!")
