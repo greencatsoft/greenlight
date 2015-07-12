@@ -8,7 +8,7 @@ organization in ThisBuild := "com.greencatsoft"
 
 homepage in ThisBuild := Some(url("http://github.com/greencatsoft/greenlight"))
 
-scalaVersion in ThisBuild := "2.11.6"
+scalaVersion in ThisBuild := "2.11.7"
 
 scalacOptions in ThisBuild ++= Seq("-feature","-deprecation")
 
