@@ -43,6 +43,12 @@ pomExtra in ThisBuild := (
       <url>http://github.com/mysticfall</url>
     </developer>
   </developers>
+  <contributors>
+    <contributor>
+      <name>Tobias Schlatter</name>
+      <url>https://github.com/gzm0</url>
+    </contributor>
+  </contributors>
 )
 
 val sharedSettings = Seq(
