@@ -12,7 +12,7 @@ The project is at a very early stage of development, so it should be used with c
 Add the following lines to your ```sbt``` build definition:
 
 ```scala
-libraryDependencies += "com.greencatsoft" %%% "greenlight" % "0.2"
+libraryDependencies += "com.greencatsoft" %%% "greenlight" % "0.3"
 ```
 
 And override the default testing framework like below:
@@ -22,7 +22,7 @@ testFrameworks := Seq(new TestFramework("com.greencatsoft.greenlight.Greenlight"
 ```
 
 If you want to test the latest snapshot version instead, change the version to 
-```0.3-SNAPSHOT``` and add Sonatype snapshot repository to the resolver as follows: 
+```0.4-SNAPSHOT``` and add Sonatype snapshot repository to the resolver as follows: 
 
 ```scala
 resolvers += 
